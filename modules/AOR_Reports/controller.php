@@ -190,7 +190,6 @@ class AOR_ReportsController extends SugarController
 
         $errorLevelStored = error_reporting();
         error_reporting(0);
-        require_once('modules/AOS_PDF_Templates/PDF_Lib/mpdf.php');
         error_reporting($errorLevelStored);
 
         $d_image = explode('?', SugarThemeRegistry::current()->getImageURL('company_logo.png'));
@@ -255,7 +254,7 @@ class AOR_ReportsController extends SugarController
         ob_clean();
         try {
             $pdf = new mPDF('en', 'A4', '', 'DejaVuSansCondensed');
-            $pdf->SetAutoFont();
+            $pdf->autoLangToFont = true;
             $pdf->setFooter('{PAGENO}');
             $pdf->WriteHTML($stylesheet, 1);
             $pdf->SetDefaultBodyCSS('background-color', '#FFFFFF');
@@ -263,7 +262,7 @@ class AOR_ReportsController extends SugarController
             $pdf->WriteHTML($head, 2);
             $pdf->WriteHTML($printable, 3);
             $pdf->Output($this->bean->name . '.pdf', "D");
-        } catch (mPDF_exception $e) {
+        } catch (MpdfException $e) {
             echo $e;
         }
 
